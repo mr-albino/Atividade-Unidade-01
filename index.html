@@ -147,6 +147,99 @@
     </div>
   </div>
 
+  <!-- Google Docs Export Modal -->
+  <div id="gdocs-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-start justify-between gap-3 mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-file-lines text-lg"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-900">Save to Google Docs</h3>
+        </div>
+        <button onclick="closeGdocsModal()" aria-label="Close" class="text-slate-400 hover:text-slate-700 transition cursor-pointer px-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Step: form -->
+      <div id="gd-form" class="space-y-4">
+        <p class="text-sm text-slate-600">
+          Your answers will be saved as a Google Doc in <strong>your own Google Drive</strong>.
+          You will then get a link to send to your teacher.
+        </p>
+        <div>
+          <label for="gd-name" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Your full name</label>
+          <input id="gd-name" type="text" placeholder="Type your full name..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-sm" />
+        </div>
+        <div id="gd-not-configured" class="hidden text-xs bg-amber-50 border border-amber-200 text-amber-800 rounded-xl p-3">
+          <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+          Google sign-in is not set up in this file yet. Use one of the options at the bottom instead.
+        </div>
+        <button id="gd-create-btn" onclick="createGoogleDoc()" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer">
+          <i class="fa-brands fa-google"></i>
+          <span>Sign in with Google &amp; create my doc</span>
+        </button>
+        <p id="gd-share-note" class="text-xs text-slate-500"></p>
+      </div>
+
+      <!-- Step: working -->
+      <div id="gd-working" class="hidden py-6 text-center space-y-3">
+        <i class="fa-solid fa-circle-notch fa-spin text-3xl text-blue-600"></i>
+        <p id="gd-working-text" class="text-sm font-medium text-slate-700">Creating your Google Doc...</p>
+      </div>
+
+      <!-- Step: done -->
+      <div id="gd-done" class="hidden space-y-4">
+        <div class="flex items-center gap-2 text-emerald-700 font-semibold text-sm">
+          <i class="fa-solid fa-circle-check text-lg"></i>
+          <span>Done! Your Google Doc is ready.</span>
+        </div>
+        <div id="gd-warning" class="hidden text-xs bg-amber-50 border border-amber-200 text-amber-800 rounded-xl p-3"></div>
+        <div>
+          <label for="gd-link" class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Link to send to your teacher</label>
+          <input id="gd-link" type="text" readonly onfocus="this.select()" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 text-sm" />
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="copyGdocsLink()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer">
+            <i class="fa-regular fa-copy"></i><span>Copy link</span>
+          </button>
+          <a id="gd-open" href="#" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i><span>Open doc</span>
+          </a>
+        </div>
+        <p class="text-xs text-slate-500">If you change your answers later, click the button again to create an updated doc and send the new link.</p>
+      </div>
+
+      <!-- Step: error -->
+      <div id="gd-error" class="hidden space-y-3">
+        <div class="text-sm bg-rose-50 border border-rose-200 text-rose-800 rounded-xl p-3">
+          <i class="fa-solid fa-circle-xmark mr-1"></i>
+          <span id="gd-error-text">Something went wrong.</span>
+        </div>
+        <button onclick="gdShow('form')" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+          <i class="fa-solid fa-arrow-left mr-1"></i>Try again
+        </button>
+      </div>
+
+      <!-- Alternative options -->
+      <div class="mt-5 pt-4 border-t border-slate-200">
+        <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Other options</p>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="copyFormattedAnswers()" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">
+            <i class="fa-regular fa-clipboard"></i><span>Copy answers (paste into a Google Doc)</span>
+          </button>
+          <button onclick="downloadWordCopy()" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">
+            <i class="fa-solid fa-download"></i><span>Download .doc</span>
+          </button>
+        </div>
+        <p class="text-xs text-slate-400 mt-2">
+          Pasting into a new Google Doc: then click <strong>Share</strong> &rarr; General access &rarr; <strong>Anyone with the link</strong> and copy the link.
+        </p>
+      </div>
+    </div>
+  </div>
+
   <!-- Top Header -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4">
@@ -173,6 +266,10 @@
           <button onclick="saveProgress()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition cursor-pointer">
             <i class="fa-solid fa-floppy-disk"></i>
             <span>Save</span>
+          </button>
+          <button onclick="openGdocsModal()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition shadow-xs cursor-pointer">
+            <i class="fa-solid fa-file-lines"></i>
+            <span>Save to Google Docs</span>
           </button>
           <button onclick="window.print()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-brand-600 text-white hover:bg-brand-700 transition shadow-xs cursor-pointer">
             <i class="fa-solid fa-print"></i>
@@ -1559,7 +1656,7 @@
 
     function saveProgress(silent = false) {
       try {
-        const inputs = document.querySelectorAll('input');
+        const inputs = document.querySelectorAll('main input');
         const state = [];
         inputs.forEach((inp, idx) => {
           if (inp.readOnly) return;
@@ -1583,7 +1680,7 @@
         const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) return;
         const state = JSON.parse(raw);
-        const inputs = document.querySelectorAll('input');
+        const inputs = document.querySelectorAll('main input');
         state.forEach(item => {
           const inp = inputs[item.idx];
           if (!inp || inp.readOnly) return;
@@ -1611,7 +1708,7 @@
     }
 
     function confirmReset() {
-      const inputs = document.querySelectorAll('input');
+      const inputs = document.querySelectorAll('main input');
       inputs.forEach(inp => {
         if (inp.readOnly) return;
         if (inp.type === 'radio' || inp.type === 'checkbox') {
@@ -1683,6 +1780,352 @@
       });
     }
     window.addEventListener('DOMContentLoaded', buildAudioPlayers);
+  </script>
+  <script>
+    // =========================================================================
+    // SAVE TO GOOGLE DOCS
+    // =========================================================================
+    // ---- TEACHER SETUP (see the notes delivered with this file) --------------
+    const GDOCS_CONFIG = {
+      // Paste your OAuth "Web application" Client ID here, e.g. '1234-abc.apps.googleusercontent.com'
+      CLIENT_ID: '466659390091-vfr1p0anaci4sb5lf6sthrovhti3ij6n.apps.googleusercontent.com',
+      // Who can open the student's link: 'reader' (view only), 'commenter' (view + comment), 'writer' (edit)
+      SHARE_ROLE: 'reader'
+    };
+    // --------------------------------------------------------------------------
+
+    const GDOCS_SCOPE = 'https://www.googleapis.com/auth/drive.file';
+    const GD_NAME_KEY = 'unit1_gdocs_student_name';
+    let gdLastLink = '';
+
+    function gdConfigured() {
+      return GDOCS_CONFIG.CLIENT_ID && !GDOCS_CONFIG.CLIENT_ID.includes('PASTE_YOUR_CLIENT_ID');
+    }
+
+    // Load Google Identity Services in the background
+    (function loadGis() {
+      if (!gdConfigured()) return;
+      const s = document.createElement('script');
+      s.src = 'https://accounts.google.com/gsi/client';
+      s.async = true;
+      s.defer = true;
+      document.head.appendChild(s);
+    })();
+
+    function gdShow(step) {
+      ['form', 'working', 'done', 'error'].forEach(id => {
+        document.getElementById('gd-' + id).classList.toggle('hidden', id !== step);
+      });
+    }
+
+    function gdStudentNameFromTest() {
+      const el = document.querySelector('main input[placeholder="Student full name..."]');
+      return el ? el.value.trim() : '';
+    }
+
+    function openGdocsModal() {
+      const nameInput = document.getElementById('gd-name');
+      let saved = '';
+      try { saved = localStorage.getItem(GD_NAME_KEY) || ''; } catch (e) {}
+      if (!nameInput.value) nameInput.value = gdStudentNameFromTest() || saved;
+
+      const roleText = { reader: 'view', commenter: 'view and comment on', writer: 'edit' }[GDOCS_CONFIG.SHARE_ROLE] || 'view';
+      document.getElementById('gd-share-note').textContent =
+        'Anyone with the link will be able to ' + roleText + ' your doc.';
+      document.getElementById('gd-not-configured').classList.toggle('hidden', gdConfigured());
+      document.getElementById('gd-create-btn').classList.toggle('hidden', !gdConfigured());
+      document.getElementById('gd-share-note').classList.toggle('hidden', !gdConfigured());
+
+      gdShow('form');
+      const modal = document.getElementById('gdocs-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeGdocsModal() {
+      const modal = document.getElementById('gdocs-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // -------------------------------------------------------------------------
+    // Build a clean, static snapshot of the worksheet (answers as plain text)
+    // -------------------------------------------------------------------------
+    function gdEsc(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function gdFixColor(rgb) {
+      const m = rgb.match(/[\d.]+/g);
+      if (!m) return '#111827';
+      const [r, g, b] = m.slice(0, 3).map(Number);
+      const lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+      // White text (on gradient banners) would vanish in a doc, so turn it dark
+      return lum > 0.8 ? '#1e293b' : `rgb(${r},${g},${b})`;
+    }
+
+    function buildSnapshotBody(studentName) {
+      const main = document.querySelector('main');
+      const clone = main.cloneNode(true);
+
+      const origEls = Array.from(main.querySelectorAll('*'));
+      const cloneEls = Array.from(clone.querySelectorAll('*'));
+      const origInputs = Array.from(main.querySelectorAll('input'));
+      const cloneInputs = Array.from(clone.querySelectorAll('input'));
+
+      // 1. Copy the visual basics (bold, size, color...) as inline styles
+      origEls.forEach((el, i) => {
+        const n = cloneEls[i];
+        if (!n) return;
+        const cs = getComputedStyle(el);
+        let st = '';
+        if (parseInt(cs.fontWeight, 10) >= 600) st += 'font-weight:bold;';
+        if (cs.fontStyle === 'italic') st += 'font-style:italic;';
+        if ((cs.textDecorationLine || '').includes('line-through')) st += 'text-decoration:line-through;';
+        const fs = parseFloat(cs.fontSize);
+        if (fs >= 17) st += `font-size:${Math.round(fs * 0.75)}pt;`;
+        if (cs.textAlign === 'center') st += 'text-align:center;';
+        st += 'color:' + gdFixColor(cs.color) + ';';
+        n.setAttribute('style', st);
+        // Anything hidden on screen stays out of the doc (except whole sections, which are always included)
+        if (cs.display === 'none' && !el.classList.contains('tab-panel')) n.setAttribute('data-drop', '1');
+      });
+
+      // 2. Replace every input by its current value
+      origInputs.forEach((inp, i) => {
+        const n = cloneInputs[i];
+        if (!n || !n.parentNode) return;
+        const span = document.createElement('span');
+        if (inp.type === 'radio' || inp.type === 'checkbox') {
+          const on = inp.checked;
+          span.textContent = (inp.type === 'radio' ? (on ? '\u25C9' : '\u25CB') : (on ? '\u2611' : '\u2610')) + ' ';
+          const lab = n.closest('label');
+          if (lab && on) lab.setAttribute('data-on', '1');
+        } else {
+          const v = (inp.value || '').trim();
+          if (inp.readOnly) {
+            span.textContent = v;
+            span.setAttribute('style', 'font-weight:bold;');
+          } else if (v) {
+            span.textContent = v;
+            span.setAttribute('style', 'background-color:#dbeafe;color:#1e3a8a;font-weight:bold;');
+          } else {
+            span.textContent = '________________';
+            span.setAttribute('style', 'color:#64748b;');
+          }
+        }
+        n.replaceWith(span);
+      });
+
+      // 3. Remove things that make no sense in a document
+      clone.querySelectorAll('[data-drop]').forEach(n => n.remove());
+      clone.querySelectorAll('.no-print, iframe, script, i, .status-icon').forEach(n => n.remove());
+
+      // 4. Labels -> inline text (selected answers get a yellow highlight)
+      clone.querySelectorAll('label').forEach(l => {
+        const s = document.createElement('span');
+        s.setAttribute('style', (l.getAttribute('style') || '') + (l.hasAttribute('data-on') ? 'background-color:#fde68a;font-weight:bold;' : ''));
+        while (l.firstChild) s.appendChild(l.firstChild);
+        s.appendChild(document.createTextNode('\u00A0\u00A0\u00A0 '));
+        l.replaceWith(s);
+      });
+
+      // 5. Leftover buttons (the word bank chips) -> plain text
+      clone.querySelectorAll('button').forEach(b => {
+        const s = document.createElement('span');
+        s.setAttribute('style', b.getAttribute('style') || '');
+        s.textContent = b.textContent.trim() + '\u00A0\u00A0 ';
+        b.replaceWith(s);
+      });
+
+      // 6. Tables with visible borders
+      clone.querySelectorAll('table').forEach(t => t.setAttribute('style', 'border-collapse:collapse;width:100%;'));
+      clone.querySelectorAll('th').forEach(t => t.setAttribute('style', 'border:1px solid #94a3b8;padding:6px;background-color:#e2e8f0;font-weight:bold;color:#0f172a;'));
+      clone.querySelectorAll('td').forEach(t => {
+        t.setAttribute('style', (t.getAttribute('style') || '') + 'border:1px solid #94a3b8;padding:6px;');
+      });
+
+      // 7. Divider before each section
+      clone.querySelectorAll('section').forEach(s => s.before(document.createElement('hr')));
+
+      // 8. Strip attributes the doc does not need
+      clone.querySelectorAll('*').forEach(el => {
+        Array.from(el.attributes).forEach(a => {
+          if (!['style', 'colspan', 'rowspan'].includes(a.name)) el.removeAttribute(a.name);
+        });
+      });
+
+      const today = new Date().toLocaleDateString('en-GB');
+      const header =
+        '<h1 style="font-size:20pt;color:#1e3a8a;">UNIT 1: Names and Titles</h1>' +
+        '<p style="color:#475569;">Basic Tactics for Listening &mdash; Interactive Worksheet</p>' +
+        '<p><b>Student:</b> ' + gdEsc(studentName || '(no name)') + ' &nbsp;&nbsp; <b>Saved on:</b> ' + today + '</p>' +
+        '<p style="color:#64748b;font-size:9pt;">Student answers are highlighted in blue. Selected options are marked \u25C9 / \u2611 and highlighted in yellow.</p>';
+
+      return header + clone.innerHTML;
+    }
+
+    function buildSnapshotHtml(studentName) {
+      return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Unit 1 - ' + gdEsc(studentName || 'Worksheet') + '</title></head>' +
+        '<body style="font-family:Arial,Helvetica,sans-serif;font-size:11pt;color:#111827;">' +
+        buildSnapshotBody(studentName) + '</body></html>';
+    }
+
+    function gdGetName() {
+      const name = document.getElementById('gd-name').value.trim();
+      try { localStorage.setItem(GD_NAME_KEY, name); } catch (e) {}
+      return name;
+    }
+
+    // -------------------------------------------------------------------------
+    // Google sign-in + Drive upload (HTML is converted to a real Google Doc)
+    // -------------------------------------------------------------------------
+    function gdRequestToken() {
+      return new Promise((resolve, reject) => {
+        if (!(window.google && google.accounts && google.accounts.oauth2)) {
+          reject(new Error('Google sign-in could not load. Check your internet connection (or ad-blocker) and try again.'));
+          return;
+        }
+        const client = google.accounts.oauth2.initTokenClient({
+          client_id: GDOCS_CONFIG.CLIENT_ID,
+          scope: GDOCS_SCOPE,
+          callback: resp => {
+            if (resp.error) reject(new Error('Google sign-in was not completed (' + resp.error + ').'));
+            else resolve(resp.access_token);
+          },
+          error_callback: err => reject(new Error(
+            err && err.type === 'popup_closed' ? 'The Google sign-in window was closed. Please try again.'
+            : 'Google sign-in failed. If you opened this file from your computer, open it from its web address instead.'
+          ))
+        });
+        client.requestAccessToken({ prompt: '' });
+      });
+    }
+
+    async function createGoogleDoc() {
+      const name = gdGetName();
+      if (!name) {
+        document.getElementById('gd-name').focus();
+        showToast('Please type your full name first.', 'info');
+        return;
+      }
+
+      let token;
+      try {
+        // Must be the first async step so the browser allows the sign-in popup
+        const pending = gdRequestToken();
+        gdShow('working');
+        document.getElementById('gd-working-text').textContent = 'Waiting for Google sign-in...';
+        token = await pending;
+      } catch (err) {
+        document.getElementById('gd-error-text').textContent = err.message;
+        gdShow('error');
+        return;
+      }
+
+      try {
+        document.getElementById('gd-working-text').textContent = 'Creating your Google Doc...';
+        const html = buildSnapshotHtml(name);
+        const meta = { name: 'Unit 1 - ' + name, mimeType: 'application/vnd.google-apps.document' };
+        const boundary = 'unit1boundary' + Date.now();
+        const body =
+          '--' + boundary + '\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n' + JSON.stringify(meta) + '\r\n' +
+          '--' + boundary + '\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n' + html + '\r\n' +
+          '--' + boundary + '--';
+
+        const up = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'multipart/related; boundary=' + boundary },
+          body
+        });
+        if (!up.ok) {
+          let msg = 'Google Drive refused the upload (error ' + up.status + ').';
+          try {
+            const j = await up.json();
+            if (j.error && j.error.message) msg += ' ' + j.error.message;
+          } catch (e) {}
+          throw new Error(msg);
+        }
+        const file = await up.json();
+
+        // Anyone with the link can open it
+        document.getElementById('gd-working-text').textContent = 'Creating the sharing link...';
+        let shareOk = true;
+        try {
+          const perm = await fetch('https://www.googleapis.com/drive/v3/files/' + file.id + '/permissions', {
+            method: 'POST',
+            headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ role: GDOCS_CONFIG.SHARE_ROLE || 'reader', type: 'anyone', allowFileDiscovery: false })
+          });
+          shareOk = perm.ok;
+        } catch (e) {
+          shareOk = false;
+        }
+
+        gdLastLink = 'https://docs.google.com/document/d/' + file.id + '/edit?usp=sharing';
+        document.getElementById('gd-link').value = gdLastLink;
+        document.getElementById('gd-open').href = gdLastLink;
+        const warn = document.getElementById('gd-warning');
+        if (shareOk) {
+          warn.classList.add('hidden');
+        } else {
+          warn.classList.remove('hidden');
+          warn.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i>Your doc was created, but Google did not allow public link sharing (this can happen with school accounts). Open the doc, click <strong>Share</strong> &rarr; General access &rarr; <strong>Anyone with the link</strong>, then copy the link.';
+        }
+        gdShow('done');
+      } catch (err) {
+        document.getElementById('gd-error-text').textContent = err.message || 'Something went wrong. Please try again.';
+        gdShow('error');
+      }
+    }
+
+    async function copyGdocsLink() {
+      try {
+        await navigator.clipboard.writeText(gdLastLink);
+      } catch (e) {
+        const el = document.getElementById('gd-link');
+        el.focus(); el.select();
+        document.execCommand('copy');
+      }
+      showToast('Link copied! Now send it to your teacher.', 'success');
+    }
+
+    // -------------------------------------------------------------------------
+    // Alternatives that need no Google sign-in
+    // -------------------------------------------------------------------------
+    async function copyFormattedAnswers() {
+      const name = gdGetName() || gdStudentNameFromTest();
+      const body = buildSnapshotBody(name);
+      try {
+        const html = '<html><body>' + body + '</body></html>';
+        const tmp = document.createElement('div');
+        tmp.innerHTML = body;
+        const item = new ClipboardItem({
+          'text/html': new Blob([html], { type: 'text/html' }),
+          'text/plain': new Blob([tmp.innerText], { type: 'text/plain' })
+        });
+        await navigator.clipboard.write([item]);
+        showToast('Copied! Open a new Google Doc and paste (Ctrl+V).', 'success');
+      } catch (e) {
+        showToast('Your browser blocked copying. Use "Download .doc" instead.', 'info');
+      }
+    }
+
+    function downloadWordCopy() {
+      const name = gdGetName() || gdStudentNameFromTest();
+      const html =
+        '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">' +
+        '<head><meta charset="utf-8"><title>Unit 1</title></head>' +
+        '<body style="font-family:Arial,Helvetica,sans-serif;font-size:11pt;">' + buildSnapshotBody(name) + '</body></html>';
+      const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'Unit 1 - ' + (name || 'Worksheet') + '.doc';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+      showToast('Downloaded. Upload it to Google Drive and open it with Google Docs.', 'info');
+    }
   </script>
 </body>
 </html>
