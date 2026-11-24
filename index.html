@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unit 1: Names and Titles — Interactive Worksheet</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Patrick Hand (for authentic memo pad feel) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            hand: ['Patrick Hand', 'cursive'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+            },
+            memo: {
+              bg: '#fefce8',
+              border: '#fde047',
+              header: '#fef08a',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Custom subtle styling for memo pads and print media */
+    .memo-pad {
+      background-image: repeating-linear-gradient(
+        transparent,
+        transparent 31px,
+        #e5e7eb 31px,
+        #e5e7eb 32px
+      );
+      line-height: 32px;
+    }
+
+    .speech-bubble {
+      position: relative;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 9999px;
+    }
+
+    .speech-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      right: 28px;
+      border-width: 10px 10px 0;
+      border-style: solid;
+      border-color: #cbd5e1 transparent;
+      display: block;
+      width: 0;
+    }
+
+    .speech-bubble::before {
+      content: '';
+      position: absolute;
+      bottom: -7px;
+      right: 29px;
+      border-width: 9px 9px 0;
+      border-style: solid;
+      border-color: #ffffff transparent;
+      display: block;
+      width: 0;
+      z-index: 1;
+    }
+
+    /* Smooth tab transitions */
+    .tab-panel {
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Print optimization: show all sections cleanly when printing */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .tab-panel {
+        display: block !important;
+        margin-bottom: 2rem;
+        page-break-inside: avoid;
+      }
+      .shadow-sm, .shadow-md, .shadow-lg {
+        box-shadow: none !important;
+      }
+      input[type="text"] {
+        border-bottom: 1px solid #475569 !important;
+        background: transparent !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- Toast Notification Banner (Replaces alert/confirm) -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Custom Reset Confirmation Modal -->
+  <div id="reset-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200">
+      <div class="flex items-center gap-3 text-amber-600 mb-3">
+        <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-rotate-left text-lg"></i>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900">Reset All Answers?</h3>
+      </div>
+      <p class="text-slate-600 text-sm mb-6">
+        This will clear all typed names, selected radio buttons, checkboxes, and test scores across all sections.
+      </p>
+      <div class="flex justify-end gap-3">
+        <button onclick="closeResetModal()" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition">
+          Cancel
+        </button>
+        <button onclick="confirmReset()" class="px-4 py-2 rounded-xl text-sm font-semibold bg-rose-600 text-white hover:bg-rose-700 transition shadow-xs">
+          Yes, Clear Everything
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-brand-600 text-white flex items-center justify-center font-extrabold text-xl shadow-sm shrink-0">
+            U1
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 bg-brand-50 px-2.5 py-0.5 rounded-full">
+                Basic Tactics for Listening
+              </span>
+              <span class="text-xs text-slate-400 hidden sm:inline">Interactive Worksheet</span>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+              UNIT 1: Names and Titles
+            </h1>
+          </div>
+        </div>
+
+        <!-- Global Action Buttons -->
+        <div class="flex flex-wrap items-center gap-2 no-print">
+          <button onclick="saveProgress()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition cursor-pointer">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Save</span>
+          </button>
+          <button onclick="window.print()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-brand-600 text-white hover:bg-brand-700 transition shadow-xs cursor-pointer">
+            <i class="fa-solid fa-print"></i>
+            <span>Print / Save PDF</span>
+          </button>
+          <button onclick="openResetModal()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-slate-600 border border-slate-300 hover:bg-slate-100 transition cursor-pointer">
+            <i class="fa-solid fa-trash-can"></i>
+            <span>Reset Answers</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav aria-label="Worksheet Sections" class="mt-4 flex items-center gap-1.5 overflow-x-auto pb-1 no-print">
+        <button onclick="switchTab('all')" id="tab-all" class="tab-btn active-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition cursor-pointer bg-brand-600 text-white">
+          <i class="fa-solid fa-layer-group mr-1.5"></i>All Pages (1–5)
+        </button>
+        <button onclick="switchTab('sec1')" id="tab-sec1" class="tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition cursor-pointer bg-slate-100 text-slate-600 hover:bg-slate-200">
+          1. Getting Ready
+        </button>
+        <button onclick="switchTab('sec2')" id="tab-sec2" class="tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition cursor-pointer bg-slate-100 text-slate-600 hover:bg-slate-200">
+          2. Hotel Guests
+        </button>
+        <button onclick="switchTab('sec3')" id="tab-sec3" class="tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition cursor-pointer bg-slate-100 text-slate-600 hover:bg-slate-200">
+          3. Phone Messages
+        </button>
+        <button onclick="switchTab('sec4')" id="tab-sec4" class="tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition cursor-pointer bg-slate-100 text-slate-600 hover:bg-slate-200">
+          4. Formal / Informal
+        </button>
+        <button onclick="switchTab('sec5')" id="tab-sec5" class="tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition cursor-pointer bg-slate-100 text-slate-600 hover:bg-slate-200">
+          5. Over to You
+        </button>
+        <button onclick="switchTab('sec6')" id="tab-sec6" class="tab-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition cursor-pointer bg-amber-100 text-amber-900 hover:bg-amber-200">
+          <i class="fa-solid fa-file-signature mr-1"></i>Unit 1 Test
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 flex-1 space-y-8">
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 1: GETTING READY (Page 1 Top)                                 -->
+    <!-- ===================================================================== -->
+    <section id="sec1" class="tab-panel bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="bg-gradient-to-r from-brand-700 to-brand-600 px-6 py-4 text-white flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center font-bold">1</span>
+          <h2 class="text-lg sm:text-xl font-bold">Getting Ready</h2>
+        </div>
+        <span class="text-xs font-medium bg-white/15 px-3 py-1 rounded-full">Page 1 • Vocabulary Classification</span>
+      </div>
+
+      <div class="p-6 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <p class="text-slate-700 font-medium">
+            Are these <span class="text-brand-700 font-bold">first names</span> or <span class="text-indigo-700 font-bold">last names</span>? Write them in the chart. Then add two more names to each list.
+          </p>
+          <button onclick="checkSection1()" class="no-print shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-brand-50 text-brand-700 border border-brand-200 hover:bg-brand-100 transition cursor-pointer">
+            <i class="fa-solid fa-check-double"></i>
+            <span>Check Word Bank</span>
+          </button>
+        </div>
+
+        <!-- Word Bank -->
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center justify-between">
+            <span><i class="fa-solid fa-box-open mr-1.5"></i>Word Bank (Click a name to auto-fill next empty slot or type below)</span>
+            <span id="wb-counter" class="text-brand-600">2 / 12 placed</span>
+          </div>
+          <div id="word-bank-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
+            <!-- Populated by JS for interactive strike-through tracking -->
+          </div>
+        </div>
+
+        <!-- Classification Chart -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- First Names Column -->
+          <div class="bg-brand-50/40 border border-brand-200 rounded-2xl p-5">
+            <div class="flex items-center justify-between pb-3 mb-4 border-b border-brand-200">
+              <h3 class="font-bold text-brand-900 text-base flex items-center gap-2">
+                <i class="fa-solid fa-user text-brand-600"></i> First names
+              </h3>
+              <span class="text-xs font-semibold text-brand-700 bg-brand-100 px-2.5 py-0.5 rounded-full">6 from box + 2 extra</span>
+            </div>
+            <div id="first-names-inputs" class="space-y-2.5">
+              <!-- Example pre-filled -->
+              <div class="flex items-center gap-2">
+                <span class="w-6 text-xs font-bold text-slate-400">1.</span>
+                <input type="text" value="David" readonly class="w-full px-3.5 py-2 rounded-xl bg-brand-100/70 border border-brand-200 text-brand-900 font-semibold text-sm cursor-not-allowed" />
+                <span class="text-xs font-semibold text-brand-600 px-2">Example</span>
+              </div>
+              <!-- 5 Word Bank Slots -->
+              <div class="flex items-center gap-2">
+                <span class="w-6 text-xs font-bold text-slate-400">2.</span>
+                <input type="text" data-col="first" data-slot="1" placeholder="Type a first name..." oninput="updateWordBankStatus()" class="sec1-input w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none text-sm transition" />
+                <span class="status-icon w-6 text-center"></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 text-xs font-bold text-slate-400">3.</span>
+                <input type="text" data-col="first" data-slot="2" placeholder="Type a first name..." oninput="updateWordBankStatus()" class="sec1-input w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none text-sm transition" />
+                <span class="status-icon w-6 text-center"></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 text-xs font-bold text-slate-400">4.</span>
+                <input type="text" data-col="first" data-slot="3" placeholder="Type a first name..." oninput="updateWordBankStatus()" class="sec1-input w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none text-sm transition" />
+                <span class="status-icon w-6 text-center"></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 text-xs font-bold text-slate-400">5.</span>
+                <input type="text" data-col="first" data-slot="4" placeholder="Type a first name..." oninput="updateWordBankStatus()" class="sec1-input w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none text-sm transition" />
+                <span class="status-icon w-6 text-center"></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 text-xs font-bold text-slate-400">6.</span>
+                <input type="text" data-col="first" data-slot="5" placeholder="Type a first name..." oninput="updateWordBankStatus()" class="sec1-input w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none text-sm transition" />
+                <span class="status-icon w-6 text-center"></span>
+              </div>
+              <!-- 2 Extra Student-Added Names -->
+              <div class="pt-2 border-t border-dashed border-brand-200 space-y-2.5">
+                <p class="text-xs font-semibold text-brand-700">+ Add two more first names of your own:</p>
+                <div class="flex items-center gap-2">
+                  <span class="w-6 text-xs font-bold text-brand-500">+1</span>
+                  <input type="text" data-col="first-extra" placeholder="Your own first name..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-dashed border-brand-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none text-sm transition" />
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-6 text-xs font-bold text-brand-500">+2</span>
+                  <input type="text" data-col="first-extra" placeholder="Your own first name..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-dashed border-brand-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none text-sm transition" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Last Names Column -->
+          <div class="bg-indigo-50/40 border border-indigo-200 rounded-2xl p-5">
+            <div class="flex items-center justify-between pb-3 mb-4 border-b border-indigo-200">
+              <h3 class="font-bold text-indigo-900 text-base flex items-center gap-2">
+                <i class="fa-solid fa-id-card text-indigo-600"></i> Last names
+              </h3>
+              <span class="text-xs font-semibold text-indigo-700 bg-indigo-100 px-2.5 py-0.5 rounded-full">6 from box + 2 extra</span>
+            </div>
+            <div id="last-names-inputs" class="space-y-2.5">
+              <!-- Example pre-filled -->
+              <div class="flex items-center gap-2">
+                <span class="w-6 text-xs font-bold text-slate-400">1.</span>
+                <input type="text" value="Kennedy" readonly class="w-full px-3.5 py-2 rounded-xl bg-indigo-100/70 border border-indigo-200 text-indigo-900 font-semibold text-sm cursor-not-allowed" />
+                <span class="text-xs font-semibold text-indigo-600 px-2">Example</span>
+              </div>
+              <!-- 5 Word Bank Slots -->
+              <div class="flex items-center gap-2">
+                <span class="w-6 text-xs font-bold text-slate-400">2.</span>
+                <input type="text" data-col="last" data-slot="1" placeholder="Type a last name..." oninput="updateWordBankStatus()" class="sec1-input w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm transition" />
+                <span class="status-icon w-6 text-center"></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 text-xs font-bold text-slate-400">3.</span>
+                <input type="text" data-col="last" data-slot="2" placeholder="Type a last name..." oninput="updateWordBankStatus()" class="sec1-input w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm transition" />
+                <span class="status-icon w-6 text-center"></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 text-xs font-bold text-slate-400">4.</span>
+                <input type="text" data-col="last" data-slot="3" placeholder="Type a last name..." oninput="updateWordBankStatus()" class="sec1-input w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm transition" />
+                <span class="status-icon w-6 text-center"></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 text-xs font-bold text-slate-400">5.</span>
+                <input type="text" data-col="last" data-slot="4" placeholder="Type a last name..." oninput="updateWordBankStatus()" class="sec1-input w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm transition" />
+                <span class="status-icon w-6 text-center"></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 text-xs font-bold text-slate-400">6.</span>
+                <input type="text" data-col="last" data-slot="5" placeholder="Type a last name..." oninput="updateWordBankStatus()" class="sec1-input w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm transition" />
+                <span class="status-icon w-6 text-center"></span>
+              </div>
+              <!-- 2 Extra Student-Added Names -->
+              <div class="pt-2 border-t border-dashed border-indigo-200 space-y-2.5">
+                <p class="text-xs font-semibold text-indigo-700">+ Add two more last names of your own:</p>
+                <div class="flex items-center gap-2">
+                  <span class="w-6 text-xs font-bold text-indigo-500">+1</span>
+                  <input type="text" data-col="last-extra" placeholder="Your own last name..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-dashed border-indigo-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm transition" />
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-6 text-xs font-bold text-indigo-500">+2</span>
+                  <input type="text" data-col="last-extra" placeholder="Your own last name..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-dashed border-indigo-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm transition" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="sec1-feedback" class="hidden rounded-xl p-3.5 text-sm font-medium"></div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 2: LET'S LISTEN — HOTEL GUESTS (Page 1 Bottom)                -->
+    <!-- ===================================================================== -->
+    <section id="sec2" class="tab-panel bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="bg-gradient-to-r from-sky-700 to-sky-600 px-6 py-4 text-white flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center font-bold">2</span>
+          <h2 class="text-lg sm:text-xl font-bold">Let's Listen</h2>
+        </div>
+        <span class="text-xs font-medium bg-white/15 px-3 py-1 rounded-full">Page 1 • Hotel Check-in</span>
+      </div>
+
+      <div class="p-6 space-y-6">
+        <div class="flex items-center gap-3 bg-sky-50 border border-sky-200 rounded-2xl p-4">
+          <div class="w-10 h-10 rounded-xl bg-sky-600 text-white flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-headphones"></i>
+          </div>
+          <p class="text-slate-700 font-medium">
+            What is the correct name of the hotel guest? Select the correct answer.
+          </p>
+        </div>
+        <div class="audio-slot no-print" data-audio="hotel" data-label="Hotel guest"></div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="sec2-questions">
+          <!-- Item 1 -->
+          <div class="border border-slate-200 rounded-2xl p-4 hover:border-sky-300 transition bg-slate-50/50">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Guest 1</div>
+            <div class="space-y-2">
+              <label class="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 transition">
+                <input type="radio" name="sec2_q1" value="a" class="w-4 h-4 text-sky-600 focus:ring-sky-500" />
+                <span class="text-sm font-medium text-slate-800"><strong class="text-sky-700 mr-1">a.</strong> Mary Carter</span>
+              </label>
+              <label class="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 transition">
+                <input type="radio" name="sec2_q1" value="b" class="w-4 h-4 text-sky-600 focus:ring-sky-500" />
+                <span class="text-sm font-medium text-slate-800"><strong class="text-sky-700 mr-1">b.</strong> Maria Carter</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="border border-slate-200 rounded-2xl p-4 hover:border-sky-300 transition bg-slate-50/50">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Guest 2</div>
+            <div class="space-y-2">
+              <label class="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 transition">
+                <input type="radio" name="sec2_q2" value="a" class="w-4 h-4 text-sky-600 focus:ring-sky-500" />
+                <span class="text-sm font-medium text-slate-800"><strong class="text-sky-700 mr-1">a.</strong> Suzanna Smith</span>
+              </label>
+              <label class="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 transition">
+                <input type="radio" name="sec2_q2" value="b" class="w-4 h-4 text-sky-600 focus:ring-sky-500" />
+                <span class="text-sm font-medium text-slate-800"><strong class="text-sky-700 mr-1">b.</strong> Susan Smith</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="border border-slate-200 rounded-2xl p-4 hover:border-sky-300 transition bg-slate-50/50">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Guest 3</div>
+            <div class="space-y-2">
+              <label class="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 transition">
+                <input type="radio" name="sec2_q3" value="a" class="w-4 h-4 text-sky-600 focus:ring-sky-500" />
+                <span class="text-sm font-medium text-slate-800"><strong class="text-sky-700 mr-1">a.</strong> Harry Wilson</span>
+              </label>
+              <label class="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 transition">
+                <input type="radio" name="sec2_q3" value="b" class="w-4 h-4 text-sky-600 focus:ring-sky-500" />
+                <span class="text-sm font-medium text-slate-800"><strong class="text-sky-700 mr-1">b.</strong> Harvey Wilson</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="border border-slate-200 rounded-2xl p-4 hover:border-sky-300 transition bg-slate-50/50">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Guest 4</div>
+            <div class="space-y-2">
+              <label class="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 transition">
+                <input type="radio" name="sec2_q4" value="a" class="w-4 h-4 text-sky-600 focus:ring-sky-500" />
+                <span class="text-sm font-medium text-slate-800"><strong class="text-sky-700 mr-1">a.</strong> Joseph Abrams</span>
+              </label>
+              <label class="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 transition">
+                <input type="radio" name="sec2_q4" value="b" class="w-4 h-4 text-sky-600 focus:ring-sky-500" />
+                <span class="text-sm font-medium text-slate-800"><strong class="text-sky-700 mr-1">b.</strong> Joseph Abramson</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Item 5 -->
+          <div class="border border-slate-200 rounded-2xl p-4 hover:border-sky-300 transition bg-slate-50/50">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Guest 5</div>
+            <div class="space-y-2">
+              <label class="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 transition">
+                <input type="radio" name="sec2_q5" value="a" class="w-4 h-4 text-sky-600 focus:ring-sky-500" />
+                <span class="text-sm font-medium text-slate-800"><strong class="text-sky-700 mr-1">a.</strong> Louis Jackson</span>
+              </label>
+              <label class="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 transition">
+                <input type="radio" name="sec2_q5" value="b" class="w-4 h-4 text-sky-600 focus:ring-sky-500" />
+                <span class="text-sm font-medium text-slate-800"><strong class="text-sky-700 mr-1">b.</strong> Louise Jackson</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Item 6 -->
+          <div class="border border-slate-200 rounded-2xl p-4 hover:border-sky-300 transition bg-slate-50/50">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Guest 6</div>
+            <div class="space-y-2">
+              <label class="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 transition">
+                <input type="radio" name="sec2_q6" value="a" class="w-4 h-4 text-sky-600 focus:ring-sky-500" />
+                <span class="text-sm font-medium text-slate-800"><strong class="text-sky-700 mr-1">a.</strong> Marlene Cruise</span>
+              </label>
+              <label class="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:bg-sky-50 has-[:checked]:border-sky-600 has-[:checked]:bg-sky-50 transition">
+                <input type="radio" name="sec2_q6" value="b" class="w-4 h-4 text-sky-600 focus:ring-sky-500" />
+                <span class="text-sm font-medium text-slate-800"><strong class="text-sky-700 mr-1">b.</strong> Marley Cruise</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 3: LET'S LISTEN — CINDY'S PHONE MESSAGES (Page 2)             -->
+    <!-- ===================================================================== -->
+    <section id="sec3" class="tab-panel bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="bg-gradient-to-r from-amber-600 to-orange-500 px-6 py-4 text-white flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center font-bold">3</span>
+          <h2 class="text-lg sm:text-xl font-bold">Let's Listen</h2>
+        </div>
+        <span class="text-xs font-medium bg-white/15 px-3 py-1 rounded-full">Page 2 • Cindy's Phone Messages</span>
+      </div>
+
+      <div class="p-6 space-y-8">
+        <!-- Task 1 -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-2.5">
+            <span class="px-3 py-1 rounded-lg bg-amber-100 text-amber-800 font-bold text-xs uppercase tracking-wider">Task 1</span>
+            <p class="text-slate-700 font-medium">
+              Cindy's father is taking phone messages for her. Listen and complete the forms.
+            </p>
+          </div>
+          <div class="audio-slot no-print" data-audio="cindy1" data-label="Task 1 — Phone messages for Cindy"></div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Memo Pad 1 -->
+            <div class="rounded-2xl border-2 border-amber-300 bg-amber-50/70 shadow-xs overflow-hidden">
+              <div class="bg-amber-200/80 px-4 py-2.5 border-b border-amber-300 flex items-center justify-between">
+                <span class="font-extrabold text-amber-950 tracking-wide text-sm uppercase">
+                  <i class="fa-solid fa-phone-volume mr-1.5 text-amber-700"></i>HERE'S WHO CALLED
+                </span>
+                <span class="w-6 h-6 rounded-full bg-amber-900 text-white text-xs font-bold flex items-center justify-center">1</span>
+              </div>
+              <div class="p-5 space-y-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">Name:</label>
+                  <input type="text" placeholder="Caller's name..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-amber-300 focus:border-amber-600 focus:ring-2 focus:ring-amber-200 outline-none text-sm font-medium" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">Telephone:</label>
+                  <input type="text" placeholder="Phone number..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-amber-300 focus:border-amber-600 focus:ring-2 focus:ring-amber-200 outline-none text-sm font-medium" />
+                </div>
+                <div class="pt-1">
+                  <span class="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-2">Here's the message:</span>
+                  <div class="flex flex-col sm:flex-row gap-3">
+                    <label class="flex items-center gap-2.5 bg-white px-3.5 py-2 rounded-xl border border-amber-200 cursor-pointer hover:bg-amber-100/50 transition flex-1">
+                      <input type="checkbox" class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
+                      <span class="text-sm font-medium text-slate-800">Please call.</span>
+                    </label>
+                    <label class="flex items-center gap-2.5 bg-white px-3.5 py-2 rounded-xl border border-amber-200 cursor-pointer hover:bg-amber-100/50 transition flex-1">
+                      <input type="checkbox" class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
+                      <span class="text-sm font-medium text-slate-800">He/She will call you.</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Memo Pad 2 -->
+            <div class="rounded-2xl border-2 border-amber-300 bg-amber-50/70 shadow-xs overflow-hidden">
+              <div class="bg-amber-200/80 px-4 py-2.5 border-b border-amber-300 flex items-center justify-between">
+                <span class="font-extrabold text-amber-950 tracking-wide text-sm uppercase">
+                  <i class="fa-solid fa-phone-volume mr-1.5 text-amber-700"></i>HERE'S WHO CALLED
+                </span>
+                <span class="w-6 h-6 rounded-full bg-amber-900 text-white text-xs font-bold flex items-center justify-center">2</span>
+              </div>
+              <div class="p-5 space-y-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">Name:</label>
+                  <input type="text" placeholder="Caller's name..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-amber-300 focus:border-amber-600 focus:ring-2 focus:ring-amber-200 outline-none text-sm font-medium" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">Telephone:</label>
+                  <input type="text" placeholder="Phone number..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-amber-300 focus:border-amber-600 focus:ring-2 focus:ring-amber-200 outline-none text-sm font-medium" />
+                </div>
+                <div class="pt-1">
+                  <span class="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-2">Here's the message:</span>
+                  <div class="flex flex-col sm:flex-row gap-3">
+                    <label class="flex items-center gap-2.5 bg-white px-3.5 py-2 rounded-xl border border-amber-200 cursor-pointer hover:bg-amber-100/50 transition flex-1">
+                      <input type="checkbox" class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
+                      <span class="text-sm font-medium text-slate-800">Please call.</span>
+                    </label>
+                    <label class="flex items-center gap-2.5 bg-white px-3.5 py-2 rounded-xl border border-amber-200 cursor-pointer hover:bg-amber-100/50 transition flex-1">
+                      <input type="checkbox" class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
+                      <span class="text-sm font-medium text-slate-800">He/She will call you.</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Memo Pad 3 -->
+            <div class="rounded-2xl border-2 border-amber-300 bg-amber-50/70 shadow-xs overflow-hidden">
+              <div class="bg-amber-200/80 px-4 py-2.5 border-b border-amber-300 flex items-center justify-between">
+                <span class="font-extrabold text-amber-950 tracking-wide text-sm uppercase">
+                  <i class="fa-solid fa-phone-volume mr-1.5 text-amber-700"></i>HERE'S WHO CALLED
+                </span>
+                <span class="w-6 h-6 rounded-full bg-amber-900 text-white text-xs font-bold flex items-center justify-center">3</span>
+              </div>
+              <div class="p-5 space-y-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">Name:</label>
+                  <input type="text" placeholder="Caller's name..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-amber-300 focus:border-amber-600 focus:ring-2 focus:ring-amber-200 outline-none text-sm font-medium" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">Telephone:</label>
+                  <input type="text" placeholder="Phone number..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-amber-300 focus:border-amber-600 focus:ring-2 focus:ring-amber-200 outline-none text-sm font-medium" />
+                </div>
+                <div class="pt-1">
+                  <span class="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-2">Here's the message:</span>
+                  <div class="flex flex-col sm:flex-row gap-3">
+                    <label class="flex items-center gap-2.5 bg-white px-3.5 py-2 rounded-xl border border-amber-200 cursor-pointer hover:bg-amber-100/50 transition flex-1">
+                      <input type="checkbox" class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
+                      <span class="text-sm font-medium text-slate-800">Please call.</span>
+                    </label>
+                    <label class="flex items-center gap-2.5 bg-white px-3.5 py-2 rounded-xl border border-amber-200 cursor-pointer hover:bg-amber-100/50 transition flex-1">
+                      <input type="checkbox" class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
+                      <span class="text-sm font-medium text-slate-800">He/She will call you.</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Memo Pad 4 -->
+            <div class="rounded-2xl border-2 border-amber-300 bg-amber-50/70 shadow-xs overflow-hidden">
+              <div class="bg-amber-200/80 px-4 py-2.5 border-b border-amber-300 flex items-center justify-between">
+                <span class="font-extrabold text-amber-950 tracking-wide text-sm uppercase">
+                  <i class="fa-solid fa-phone-volume mr-1.5 text-amber-700"></i>HERE'S WHO CALLED
+                </span>
+                <span class="w-6 h-6 rounded-full bg-amber-900 text-white text-xs font-bold flex items-center justify-center">4</span>
+              </div>
+              <div class="p-5 space-y-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">Name:</label>
+                  <input type="text" placeholder="Caller's name..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-amber-300 focus:border-amber-600 focus:ring-2 focus:ring-amber-200 outline-none text-sm font-medium" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">Telephone:</label>
+                  <input type="text" placeholder="Phone number..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-amber-300 focus:border-amber-600 focus:ring-2 focus:ring-amber-200 outline-none text-sm font-medium" />
+                </div>
+                <div class="pt-1">
+                  <span class="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-2">Here's the message:</span>
+                  <div class="flex flex-col sm:flex-row gap-3">
+                    <label class="flex items-center gap-2.5 bg-white px-3.5 py-2 rounded-xl border border-amber-200 cursor-pointer hover:bg-amber-100/50 transition flex-1">
+                      <input type="checkbox" class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
+                      <span class="text-sm font-medium text-slate-800">Please call.</span>
+                    </label>
+                    <label class="flex items-center gap-2.5 bg-white px-3.5 py-2 rounded-xl border border-amber-200 cursor-pointer hover:bg-amber-100/50 transition flex-1">
+                      <input type="checkbox" class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
+                      <span class="text-sm font-medium text-slate-800">He/She will call you.</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task 2 -->
+        <div class="pt-6 border-t border-slate-200 space-y-4">
+          <div class="flex items-center gap-2.5">
+            <span class="px-3 py-1 rounded-lg bg-amber-100 text-amber-800 font-bold text-xs uppercase tracking-wider">Task 2</span>
+            <p class="text-slate-700 font-medium">
+              Listen again. Select the correct answer.
+            </p>
+          </div>
+          <div class="audio-slot no-print" data-audio="cindy2" data-label="Task 2 — Listen again"></div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Q1 -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60">
+              <p class="font-semibold text-slate-800 text-sm mb-3">1. Bob knows Cindy from ___________.</p>
+              <div class="grid grid-cols-3 gap-2">
+                <label class="flex items-center justify-center gap-2 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50 text-sm">
+                  <input type="radio" name="sec3_t2_q1" value="a" class="text-amber-600" />
+                  <span><strong>a.</strong> work</span>
+                </label>
+                <label class="flex items-center justify-center gap-2 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50 text-sm">
+                  <input type="radio" name="sec3_t2_q1" value="b" class="text-amber-600" />
+                  <span><strong>b.</strong> school</span>
+                </label>
+                <label class="flex items-center justify-center gap-2 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50 text-sm">
+                  <input type="radio" name="sec3_t2_q1" value="c" class="text-amber-600" />
+                  <span><strong>c.</strong> home</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60">
+              <p class="font-semibold text-slate-800 text-sm mb-3">2. ___________ is the person who answers the phone.</p>
+              <div class="grid grid-cols-3 gap-2">
+                <label class="flex items-center justify-center gap-2 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50 text-sm">
+                  <input type="radio" name="sec3_t2_q2" value="a" class="text-amber-600" />
+                  <span><strong>a.</strong> Tom</span>
+                </label>
+                <label class="flex items-center justify-center gap-2 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50 text-sm">
+                  <input type="radio" name="sec3_t2_q2" value="b" class="text-amber-600" />
+                  <span><strong>b.</strong> Cindy</span>
+                </label>
+                <label class="flex items-center justify-center gap-2 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50 text-sm">
+                  <input type="radio" name="sec3_t2_q2" value="c" class="text-amber-600" />
+                  <span><strong>c.</strong> Nancy</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60">
+              <p class="font-semibold text-slate-800 text-sm mb-3">3. Cindy can't take the call because she is ___________.</p>
+              <div class="grid grid-cols-3 gap-2">
+                <label class="flex items-center justify-center gap-2 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50 text-sm">
+                  <input type="radio" name="sec3_t2_q3" value="a" class="text-amber-600" />
+                  <span><strong>a.</strong> busy</span>
+                </label>
+                <label class="flex items-center justify-center gap-2 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50 text-sm">
+                  <input type="radio" name="sec3_t2_q3" value="b" class="text-amber-600" />
+                  <span><strong>b.</strong> asleep</span>
+                </label>
+                <label class="flex items-center justify-center gap-2 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50 text-sm">
+                  <input type="radio" name="sec3_t2_q3" value="c" class="text-amber-600" />
+                  <span><strong>c.</strong> not home</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60">
+              <p class="font-semibold text-slate-800 text-sm mb-3">4. The caller is Cindy's ___________.</p>
+              <div class="grid grid-cols-3 gap-2">
+                <label class="flex items-center justify-center gap-2 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50 text-sm">
+                  <input type="radio" name="sec3_t2_q4" value="a" class="text-amber-600" />
+                  <span><strong>a.</strong> boss</span>
+                </label>
+                <label class="flex items-center justify-center gap-2 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50 text-sm">
+                  <input type="radio" name="sec3_t2_q4" value="b" class="text-amber-600" />
+                  <span><strong>b.</strong> teacher</span>
+                </label>
+                <label class="flex items-center justify-center gap-2 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50 text-sm">
+                  <input type="radio" name="sec3_t2_q4" value="c" class="text-amber-600" />
+                  <span><strong>c.</strong> friend</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 4: LET'S LISTEN — FORMAL VS. INFORMAL GREETINGS (Page 3)      -->
+    <!-- ===================================================================== -->
+    <section id="sec4" class="tab-panel bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="bg-gradient-to-r from-indigo-700 to-purple-600 px-6 py-4 text-white flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center font-bold">4</span>
+          <h2 class="text-lg sm:text-xl font-bold">Let's Listen</h2>
+        </div>
+        <span class="text-xs font-medium bg-white/15 px-3 py-1 rounded-full">Page 3 • Titles & Greetings</span>
+      </div>
+
+      <div class="p-6 space-y-8">
+        <!-- Grammar / Usage Note Box -->
+        <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-5">
+          <div class="flex items-start gap-3 mb-4">
+            <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 mt-0.5">
+              <i class="fa-solid fa-lightbulb"></i>
+            </div>
+            <p class="text-slate-800 text-sm sm:text-base leading-relaxed">
+              We usually use a <strong>title</strong> (<span class="font-semibold text-indigo-800">Ms., Mr., Mrs., Miss, Dr., Professor</span>) with a <strong>last name</strong>, but not with a first name, in formal greetings.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <!-- Formal Examples -->
+            <div class="bg-white rounded-xl p-4 border border-indigo-100 space-y-2">
+              <div class="font-bold text-indigo-900 uppercase text-xs tracking-wider">Formal</div>
+              <div class="flex items-center justify-between text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg">
+                <span>Good morning, <strong>Ms. Smith</strong>.</span>
+                <span class="font-bold text-xs uppercase"><i class="fa-solid fa-check mr-1"></i>Correct</span>
+              </div>
+              <div class="flex items-center justify-between text-rose-700 bg-rose-50 px-3 py-1.5 rounded-lg">
+                <span>Good morning, <del>Ms. Mary</del>.</span>
+                <span class="font-bold text-xs uppercase"><i class="fa-solid fa-xmark mr-1"></i>Incorrect</span>
+              </div>
+            </div>
+
+            <!-- Informal Examples -->
+            <div class="bg-white rounded-xl p-4 border border-indigo-100 space-y-2">
+              <div class="font-bold text-indigo-900 uppercase text-xs tracking-wider">Informal</div>
+              <div class="flex items-center justify-between text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg">
+                <span>Good morning, <strong>Mary</strong>.</span>
+                <span class="font-bold text-xs uppercase"><i class="fa-solid fa-check mr-1"></i>Correct</span>
+              </div>
+              <div class="flex items-center justify-between text-rose-700 bg-rose-50 px-3 py-1.5 rounded-lg">
+                <span>Good morning, <del>Smith</del>.</span>
+                <span class="font-bold text-xs uppercase"><i class="fa-solid fa-xmark mr-1"></i>Incorrect</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task 1 & Task 2 Side by Side on Desktop -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <!-- Task 1 (5 cols) -->
+          <div class="lg:col-span-5 space-y-4">
+            <div class="flex items-center gap-2.5">
+              <span class="px-3 py-1 rounded-lg bg-indigo-100 text-indigo-800 font-bold text-xs uppercase tracking-wider">Task 1</span>
+              <p class="text-slate-700 font-medium text-sm">
+                Listen. Are the woman's greetings formal or informal? Check (✓) the correct answer.
+              </p>
+            </div>
+            <div class="audio-slot no-print" data-audio="greet1" data-label="Task 1 — Formal or informal greetings"></div>
+
+            <div class="border border-slate-200 rounded-2xl overflow-hidden">
+              <table class="w-full text-sm">
+                <thead class="bg-amber-100/80 text-slate-800 border-b border-slate-200">
+                  <tr>
+                    <th class="py-2.5 px-4 text-left font-bold">#</th>
+                    <th class="py-2.5 px-4 text-center font-bold">Formal</th>
+                    <th class="py-2.5 px-4 text-center font-bold">Informal</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 bg-white">
+                  <!-- Row 1 (Pre-checked example as in PDF) -->
+                  <tr class="bg-slate-50/70">
+                    <td class="py-2.5 px-4 font-bold text-slate-600">1. <span class="text-xs font-normal text-slate-400">(ex.)</span></td>
+                    <td class="py-2.5 px-4 text-center">
+                      <input type="radio" name="sec4_t1_1" value="formal" class="w-4 h-4 text-indigo-600 cursor-pointer" />
+                    </td>
+                    <td class="py-2.5 px-4 text-center">
+                      <input type="radio" name="sec4_t1_1" value="informal" checked class="w-4 h-4 text-indigo-600 cursor-pointer" />
+                    </td>
+                  </tr>
+                  <!-- Rows 2 to 8 -->
+                  <tr class="hover:bg-indigo-50/40">
+                    <td class="py-2.5 px-4 font-bold text-slate-700">2.</td>
+                    <td class="py-2.5 px-4 text-center"><input type="radio" name="sec4_t1_2" value="formal" class="w-4 h-4 text-indigo-600 cursor-pointer" /></td>
+                    <td class="py-2.5 px-4 text-center"><input type="radio" name="sec4_t1_2" value="informal" class="w-4 h-4 text-indigo-600 cursor-pointer" /></td>
+                  </tr>
+                  <tr class="hover:bg-indigo-50/40">
+                    <td class="py-2.5 px-4 font-bold text-slate-700">3.</td>
+                    <td class="py-2.5 px-4 text-center"><input type="radio" name="sec4_t1_3" value="formal" class="w-4 h-4 text-indigo-600 cursor-pointer" /></td>
+                    <td class="py-2.5 px-4 text-center"><input type="radio" name="sec4_t1_3" value="informal" class="w-4 h-4 text-indigo-600 cursor-pointer" /></td>
+                  </tr>
+                  <tr class="hover:bg-indigo-50/40">
+                    <td class="py-2.5 px-4 font-bold text-slate-700">4.</td>
+                    <td class="py-2.5 px-4 text-center"><input type="radio" name="sec4_t1_4" value="formal" class="w-4 h-4 text-indigo-600 cursor-pointer" /></td>
+                    <td class="py-2.5 px-4 text-center"><input type="radio" name="sec4_t1_4" value="informal" class="w-4 h-4 text-indigo-600 cursor-pointer" /></td>
+                  </tr>
+                  <tr class="hover:bg-indigo-50/40">
+                    <td class="py-2.5 px-4 font-bold text-slate-700">5.</td>
+                    <td class="py-2.5 px-4 text-center"><input type="radio" name="sec4_t1_5" value="formal" class="w-4 h-4 text-indigo-600 cursor-pointer" /></td>
+                    <td class="py-2.5 px-4 text-center"><input type="radio" name="sec4_t1_5" value="informal" class="w-4 h-4 text-indigo-600 cursor-pointer" /></td>
+                  </tr>
+                  <tr class="hover:bg-indigo-50/40">
+                    <td class="py-2.5 px-4 font-bold text-slate-700">6.</td>
+                    <td class="py-2.5 px-4 text-center"><input type="radio" name="sec4_t1_6" value="formal" class="w-4 h-4 text-indigo-600 cursor-pointer" /></td>
+                    <td class="py-2.5 px-4 text-center"><input type="radio" name="sec4_t1_6" value="informal" class="w-4 h-4 text-indigo-600 cursor-pointer" /></td>
+                  </tr>
+                  <tr class="hover:bg-indigo-50/40">
+                    <td class="py-2.5 px-4 font-bold text-slate-700">7.</td>
+                    <td class="py-2.5 px-4 text-center"><input type="radio" name="sec4_t1_7" value="formal" class="w-4 h-4 text-indigo-600 cursor-pointer" /></td>
+                    <td class="py-2.5 px-4 text-center"><input type="radio" name="sec4_t1_7" value="informal" class="w-4 h-4 text-indigo-600 cursor-pointer" /></td>
+                  </tr>
+                  <tr class="hover:bg-indigo-50/40">
+                    <td class="py-2.5 px-4 font-bold text-slate-700">8.</td>
+                    <td class="py-2.5 px-4 text-center"><input type="radio" name="sec4_t1_8" value="formal" class="w-4 h-4 text-indigo-600 cursor-pointer" /></td>
+                    <td class="py-2.5 px-4 text-center"><input type="radio" name="sec4_t1_8" value="informal" class="w-4 h-4 text-indigo-600 cursor-pointer" /></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Task 2 (7 cols) -->
+          <div class="lg:col-span-7 space-y-4">
+            <div class="flex items-center gap-2.5">
+              <span class="px-3 py-1 rounded-lg bg-indigo-100 text-indigo-800 font-bold text-xs uppercase tracking-wider">Task 2</span>
+              <p class="text-slate-700 font-medium text-sm">
+                Listen again. What name does each person use? Select the correct answer.
+              </p>
+            </div>
+            <div class="audio-slot no-print" data-audio="greet2" data-label="Task 2 — Listen again"></div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- 1 -->
+              <div class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50/50">
+                <div class="text-xs font-bold text-slate-400 mb-2">Person 1</div>
+                <div class="space-y-1.5">
+                  <label class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 text-sm">
+                    <input type="radio" name="sec4_t2_1" value="a" class="text-indigo-600" />
+                    <span><strong>a.</strong> Damien</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 text-sm">
+                    <input type="radio" name="sec4_t2_1" value="b" class="text-indigo-600" />
+                    <span><strong>b.</strong> David</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 2 -->
+              <div class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50/50">
+                <div class="text-xs font-bold text-slate-400 mb-2">Person 2</div>
+                <div class="space-y-1.5">
+                  <label class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 text-sm">
+                    <input type="radio" name="sec4_t2_2" value="a" class="text-indigo-600" />
+                    <span><strong>a.</strong> Jackson</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 text-sm">
+                    <input type="radio" name="sec4_t2_2" value="b" class="text-indigo-600" />
+                    <span><strong>b.</strong> Johnson</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 3 -->
+              <div class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50/50">
+                <div class="text-xs font-bold text-slate-400 mb-2">Person 3</div>
+                <div class="space-y-1.5">
+                  <label class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 text-sm">
+                    <input type="radio" name="sec4_t2_3" value="a" class="text-indigo-600" />
+                    <span><strong>a.</strong> Rob</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 text-sm">
+                    <input type="radio" name="sec4_t2_3" value="b" class="text-indigo-600" />
+                    <span><strong>b.</strong> Bob</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 4 -->
+              <div class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50/50">
+                <div class="text-xs font-bold text-slate-400 mb-2">Person 4</div>
+                <div class="space-y-1.5">
+                  <label class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 text-sm">
+                    <input type="radio" name="sec4_t2_4" value="a" class="text-indigo-600" />
+                    <span><strong>a.</strong> Michelle</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 text-sm">
+                    <input type="radio" name="sec4_t2_4" value="b" class="text-indigo-600" />
+                    <span><strong>b.</strong> Marcia</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 5 -->
+              <div class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50/50">
+                <div class="text-xs font-bold text-slate-400 mb-2">Person 5</div>
+                <div class="space-y-1.5">
+                  <label class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 text-sm">
+                    <input type="radio" name="sec4_t2_5" value="a" class="text-indigo-600" />
+                    <span><strong>a.</strong> Smith</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 text-sm">
+                    <input type="radio" name="sec4_t2_5" value="b" class="text-indigo-600" />
+                    <span><strong>b.</strong> Schmidt</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 6 -->
+              <div class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50/50">
+                <div class="text-xs font-bold text-slate-400 mb-2">Person 6</div>
+                <div class="space-y-1.5">
+                  <label class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 text-sm">
+                    <input type="radio" name="sec4_t2_6" value="a" class="text-indigo-600" />
+                    <span><strong>a.</strong> James</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 text-sm">
+                    <input type="radio" name="sec4_t2_6" value="b" class="text-indigo-600" />
+                    <span><strong>b.</strong> John</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 7 -->
+              <div class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50/50">
+                <div class="text-xs font-bold text-slate-400 mb-2">Person 7</div>
+                <div class="space-y-1.5">
+                  <label class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 text-sm">
+                    <input type="radio" name="sec4_t2_7" value="a" class="text-indigo-600" />
+                    <span><strong>a.</strong> Abrams</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 text-sm">
+                    <input type="radio" name="sec4_t2_7" value="b" class="text-indigo-600" />
+                    <span><strong>b.</strong> Abraham</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 8 -->
+              <div class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50/50">
+                <div class="text-xs font-bold text-slate-400 mb-2">Person 8</div>
+                <div class="space-y-1.5">
+                  <label class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 text-sm">
+                    <input type="radio" name="sec4_t2_8" value="a" class="text-indigo-600" />
+                    <span><strong>a.</strong> Steinway</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50 text-sm">
+                    <input type="radio" name="sec4_t2_8" value="b" class="text-indigo-600" />
+                    <span><strong>b.</strong> Steinberg</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 5: OVER TO YOU: WHAT'S YOUR NAME? (Page 4)                    -->
+    <!-- ===================================================================== -->
+    <section id="sec5" class="tab-panel bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="bg-gradient-to-r from-teal-700 to-emerald-600 px-6 py-4 text-white flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center font-bold">5</span>
+          <h2 class="text-lg sm:text-xl font-bold">Over to You: What's your name?</h2>
+        </div>
+        <span class="text-xs font-medium bg-white/15 px-3 py-1 rounded-full">Page 4 • Speaking & Interaction</span>
+      </div>
+
+      <div class="p-6 space-y-8">
+        <!-- Reference Speech Bubbles -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-teal-50/60 border border-teal-200 rounded-2xl p-5">
+          <div class="speech-bubble px-5 py-3 text-center font-semibold text-slate-800 shadow-xs">
+            "How do you spell that?"
+          </div>
+          <div class="speech-bubble px-5 py-3 text-center font-semibold text-slate-800 shadow-xs">
+            "What's your telephone number?"
+          </div>
+        </div>
+
+        <!-- Task 1 -->
+        <div class="space-y-4">
+          <div class="flex items-center gap-2.5">
+            <span class="px-3 py-1 rounded-lg bg-teal-100 text-teal-800 font-bold text-xs uppercase tracking-wider">Task 1</span>
+            <p class="text-slate-700 font-medium">
+              Talk to four classmates. Find out their names and telephone numbers. Ask these questions and write the answers in the chart.
+            </p>
+          </div>
+
+          <!-- Prompt Questions Box -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-slate-700">
+            <div class="flex items-center gap-2">
+              <i class="fa-regular fa-comment-dots text-teal-600"></i>
+              <span>Excuse me. What's your first name?</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-regular fa-comment-dots text-teal-600"></i>
+              <span>How do you spell that?</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-regular fa-comment-dots text-teal-600"></i>
+              <span>What's your last name?</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i class="fa-regular fa-comment-dots text-teal-600"></i>
+              <span>What's your telephone number?</span>
+            </div>
+          </div>
+
+          <!-- 4-Row Interactive Table -->
+          <div class="overflow-x-auto border border-slate-200 rounded-2xl">
+            <table class="w-full text-sm text-left">
+              <thead class="bg-teal-700 text-white">
+                <tr>
+                  <th class="py-3 px-4 w-12">#</th>
+                  <th class="py-3 px-4">First name</th>
+                  <th class="py-3 px-4">Last name</th>
+                  <th class="py-3 px-4">Telephone number</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 bg-white">
+                <tr>
+                  <td class="py-3 px-4 font-bold text-slate-500">1.</td>
+                  <td class="py-2.5 px-3"><input type="text" placeholder="First name..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 outline-none" /></td>
+                  <td class="py-2.5 px-3"><input type="text" placeholder="Last name..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 outline-none" /></td>
+                  <td class="py-2.5 px-3"><input type="text" placeholder="Telephone..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 outline-none" /></td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4 font-bold text-slate-500">2.</td>
+                  <td class="py-2.5 px-3"><input type="text" placeholder="First name..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 outline-none" /></td>
+                  <td class="py-2.5 px-3"><input type="text" placeholder="Last name..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 outline-none" /></td>
+                  <td class="py-2.5 px-3"><input type="text" placeholder="Telephone..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 outline-none" /></td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4 font-bold text-slate-500">3.</td>
+                  <td class="py-2.5 px-3"><input type="text" placeholder="First name..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 outline-none" /></td>
+                  <td class="py-2.5 px-3"><input type="text" placeholder="Last name..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 outline-none" /></td>
+                  <td class="py-2.5 px-3"><input type="text" placeholder="Telephone..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 outline-none" /></td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4 font-bold text-slate-500">4.</td>
+                  <td class="py-2.5 px-3"><input type="text" placeholder="First name..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 outline-none" /></td>
+                  <td class="py-2.5 px-3"><input type="text" placeholder="Last name..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 outline-none" /></td>
+                  <td class="py-2.5 px-3"><input type="text" placeholder="Telephone..." class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 outline-none" /></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Task 2 -->
+        <div class="pt-6 border-t border-slate-200 space-y-4">
+          <div class="flex items-center gap-2.5">
+            <span class="px-3 py-1 rounded-lg bg-teal-100 text-teal-800 font-bold text-xs uppercase tracking-wider">Task 2</span>
+            <p class="text-slate-700 font-medium">
+              Choose the name of a famous person. Talk to three classmates and find out the names they chose.
+            </p>
+          </div>
+
+          <div class="bg-teal-50/50 border border-teal-200 rounded-2xl p-5 space-y-3">
+            <div class="text-xs font-bold uppercase tracking-wider text-teal-800">Example Dialogue & Practice</div>
+            <div class="space-y-3 text-sm sm:text-base">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-full bg-teal-700 text-white font-bold text-xs flex items-center justify-center shrink-0">A</span>
+                <span class="font-medium text-slate-800">Who did you choose?</span>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="w-7 h-7 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0">B</span>
+                <span class="font-medium text-slate-800">I chose</span>
+                <input type="text" id="famous-person-input" oninput="autoSpellFamousPerson()" placeholder="e.g., Taylor Swift" class="flex-1 min-w-[200px] px-3.5 py-1.5 rounded-xl bg-white border border-teal-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 outline-none text-sm font-semibold" />
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-full bg-teal-700 text-white font-bold text-xs flex items-center justify-center shrink-0">A</span>
+                <span class="font-medium text-slate-800">How do you spell that?</span>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="w-7 h-7 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0">B</span>
+                <input type="text" id="famous-spell-input" placeholder="e.g., T-A-Y-L-O-R  S-W-I-F-T" class="flex-1 min-w-[220px] px-3.5 py-1.5 rounded-xl bg-white border border-teal-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 outline-none text-sm font-mono tracking-wider uppercase" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 6: UNIT 1 TEST (Page 5)                                       -->
+    <!-- ===================================================================== -->
+    <section id="sec6" class="tab-panel bg-white rounded-2xl border-2 border-slate-300 shadow-md overflow-hidden">
+      <!-- Test Header -->
+      <div class="bg-slate-900 px-6 py-5 text-white">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-700">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-amber-400">Assessment • Page 5</span>
+            <h2 class="text-2xl font-extrabold tracking-tight">Unit 1 Test</h2>
+          </div>
+
+          <!-- Score Box -->
+          <div class="flex items-center gap-3 bg-slate-800 border border-slate-700 px-4 py-2.5 rounded-2xl self-start md:self-auto">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-300">Total Score</span>
+            <div class="flex items-baseline gap-1">
+              <input type="number" min="0" max="10" placeholder="—" class="w-12 text-center bg-slate-900 border border-slate-600 rounded-lg py-1 text-lg font-extrabold text-amber-400 focus:border-amber-400 outline-none" />
+              <span class="text-slate-400 font-bold">/ 10</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Name & Date -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+          <div class="flex items-center gap-3">
+            <label class="text-sm font-semibold text-slate-300 shrink-0">Name:</label>
+            <input type="text" placeholder="Student full name..." class="w-full px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:border-amber-400 outline-none text-sm" />
+          </div>
+          <div class="flex items-center gap-3">
+            <label class="text-sm font-semibold text-slate-300 shrink-0">Date:</label>
+            <input type="date" class="w-full px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white focus:border-amber-400 outline-none text-sm" />
+          </div>
+        </div>
+      </div>
+
+      <div class="p-6 space-y-8">
+        <!-- Test Part 1 -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between gap-2 bg-slate-100 px-4 py-3 rounded-2xl border border-slate-200">
+            <div>
+              <h3 class="font-bold text-slate-900 text-base">1. Let's Listen</h3>
+              <p class="text-slate-600 text-sm">Linda is listening to messages on her voicemail. Who is speaking? Listen and select the correct name.</p>
+            </div>
+            <span class="shrink-0 px-3 py-1 rounded-xl bg-slate-900 text-white text-xs font-bold">5 pts</span>
+          </div>
+          <div class="audio-slot no-print" data-audio="test1" data-label="Voicemail messages"></div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Q1 -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60">
+              <div class="text-xs font-bold text-slate-400 mb-2">1.</div>
+              <div class="space-y-1.5">
+                <label class="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100 text-sm">
+                  <input type="radio" name="test_p1_1" value="a" class="text-slate-900" />
+                  <span><strong>a.</strong> Mike Smith</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100 text-sm">
+                  <input type="radio" name="test_p1_1" value="b" class="text-slate-900" />
+                  <span><strong>b.</strong> Matt Smith</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100 text-sm">
+                  <input type="radio" name="test_p1_1" value="c" class="text-slate-900" />
+                  <span><strong>c.</strong> Mark Smith</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60">
+              <div class="text-xs font-bold text-slate-400 mb-2">2.</div>
+              <div class="space-y-1.5">
+                <label class="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100 text-sm">
+                  <input type="radio" name="test_p1_2" value="a" class="text-slate-900" />
+                  <span><strong>a.</strong> Jane Denton</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100 text-sm">
+                  <input type="radio" name="test_p1_2" value="b" class="text-slate-900" />
+                  <span><strong>b.</strong> Jane Dennison</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100 text-sm">
+                  <input type="radio" name="test_p1_2" value="c" class="text-slate-900" />
+                  <span><strong>c.</strong> Jane Dennis</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60">
+              <div class="text-xs font-bold text-slate-400 mb-2">3.</div>
+              <div class="space-y-1.5">
+                <label class="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100 text-sm">
+                  <input type="radio" name="test_p1_3" value="a" class="text-slate-900" />
+                  <span><strong>a.</strong> Helena Williams</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100 text-sm">
+                  <input type="radio" name="test_p1_3" value="b" class="text-slate-900" />
+                  <span><strong>b.</strong> Elena Williams</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100 text-sm">
+                  <input type="radio" name="test_p1_3" value="c" class="text-slate-900" />
+                  <span><strong>c.</strong> Helen Williams</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60">
+              <div class="text-xs font-bold text-slate-400 mb-2">4.</div>
+              <div class="space-y-1.5">
+                <label class="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100 text-sm">
+                  <input type="radio" name="test_p1_4" value="a" class="text-slate-900" />
+                  <span><strong>a.</strong> Kate Andrews</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100 text-sm">
+                  <input type="radio" name="test_p1_4" value="b" class="text-slate-900" />
+                  <span><strong>b.</strong> Kate Gundersen</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100 text-sm">
+                  <input type="radio" name="test_p1_4" value="c" class="text-slate-900" />
+                  <span><strong>c.</strong> Kate Anderson</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60">
+              <div class="text-xs font-bold text-slate-400 mb-2">5.</div>
+              <div class="space-y-1.5">
+                <label class="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100 text-sm">
+                  <input type="radio" name="test_p1_5" value="a" class="text-slate-900" />
+                  <span><strong>a.</strong> John Jones</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100 text-sm">
+                  <input type="radio" name="test_p1_5" value="b" class="text-slate-900" />
+                  <span><strong>b.</strong> Tim Jones</span>
+                </label>
+                <label class="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100 text-sm">
+                  <input type="radio" name="test_p1_5" value="c" class="text-slate-900" />
+                  <span><strong>c.</strong> Tom Jones</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Test Part 2 -->
+        <div class="pt-6 border-t border-slate-200 space-y-4">
+          <div class="flex items-center justify-between gap-2 bg-slate-100 px-4 py-3 rounded-2xl border border-slate-200">
+            <div>
+              <h3 class="font-bold text-slate-900 text-base">2. Let's Listen</h3>
+              <p class="text-slate-600 text-sm">Listen to the phone conversations and complete the message pads.</p>
+            </div>
+            <span class="shrink-0 px-3 py-1 rounded-xl bg-slate-900 text-white text-xs font-bold">5 pts</span>
+          </div>
+          <div class="audio-slot no-print" data-audio="test2" data-label="Message pads"></div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Test Message Pad 1 -->
+            <div class="rounded-2xl border-2 border-slate-300 bg-amber-50/50 shadow-xs overflow-hidden">
+              <div class="bg-slate-800 text-white px-4 py-2.5 flex items-center justify-between">
+                <span class="font-extrabold tracking-wide text-sm uppercase">HERE'S WHO CALLED</span>
+                <span class="w-6 h-6 rounded-full bg-amber-400 text-slate-900 text-xs font-extrabold flex items-center justify-center">1</span>
+              </div>
+              <div class="p-5 space-y-4">
+                <div class="flex items-center gap-2 bg-white px-3.5 py-2 rounded-xl border border-slate-200">
+                  <span class="text-xs font-bold uppercase text-slate-500">Message for:</span>
+                  <span class="font-bold text-slate-900">James</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <input type="text" placeholder="Caller's name..." class="flex-1 px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-slate-900 outline-none text-sm font-medium" />
+                  <span class="text-sm font-semibold text-slate-700 shrink-0">called.</span>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Phone number:</label>
+                  <input type="text" placeholder="Phone number..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-slate-900 outline-none text-sm font-medium" />
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 pt-1">
+                  <label class="flex items-center gap-2.5 bg-white px-3.5 py-2 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 flex-1">
+                    <input type="checkbox" class="w-4 h-4 rounded text-slate-900" />
+                    <span class="text-sm font-medium text-slate-800">Please call.</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 bg-white px-3.5 py-2 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 flex-1">
+                    <input type="checkbox" class="w-4 h-4 rounded text-slate-900" />
+                    <span class="text-sm font-medium text-slate-800">He/She will call you.</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Test Message Pad 2 -->
+            <div class="rounded-2xl border-2 border-slate-300 bg-amber-50/50 shadow-xs overflow-hidden">
+              <div class="bg-slate-800 text-white px-4 py-2.5 flex items-center justify-between">
+                <span class="font-extrabold tracking-wide text-sm uppercase">HERE'S WHO CALLED</span>
+                <span class="w-6 h-6 rounded-full bg-amber-400 text-slate-900 text-xs font-extrabold flex items-center justify-center">2</span>
+              </div>
+              <div class="p-5 space-y-4">
+                <div class="flex items-center gap-2 bg-white px-3.5 py-2 rounded-xl border border-slate-200">
+                  <span class="text-xs font-bold uppercase text-slate-500">Message for:</span>
+                  <span class="font-bold text-slate-900">Mary</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <input type="text" placeholder="Caller's name..." class="flex-1 px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-slate-900 outline-none text-sm font-medium" />
+                  <span class="text-sm font-semibold text-slate-700 shrink-0">called.</span>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Phone number:</label>
+                  <input type="text" placeholder="Phone number..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 focus:border-slate-900 outline-none text-sm font-medium" />
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 pt-1">
+                  <label class="flex items-center gap-2.5 bg-white px-3.5 py-2 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 flex-1">
+                    <input type="checkbox" class="w-4 h-4 rounded text-slate-900" />
+                    <span class="text-sm font-medium text-slate-800">Please call.</span>
+                  </label>
+                  <label class="flex items-center gap-2.5 bg-white px-3.5 py-2 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 flex-1">
+                    <input type="checkbox" class="w-4 h-4 rounded text-slate-900" />
+                    <span class="text-sm font-medium text-slate-800">He/She will call you.</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-5 px-4 text-center text-xs text-slate-500">
+    <p class="font-medium text-slate-600">Basic Tactics for Listening • Unit 1: Names and Titles</p>
+    <p class="mt-1">Oxford University Press. Interactive educational worksheet adapted for classroom & self-study use.</p>
+  </footer>
+
+  <!-- Interactive JavaScript -->
+  <script>
+    // =========================================================================
+    // 1. WORD BANK DATA & LOGIC (Section 1: Getting Ready)
+    // =========================================================================
+    const WORD_BANK = [
+      { word: 'David', type: 'first', prefilled: true },
+      { word: 'Kennedy', type: 'last', prefilled: true },
+      { word: 'Susan', type: 'first', prefilled: false },
+      { word: 'Cruise', type: 'last', prefilled: false },
+      { word: 'Nancy', type: 'first', prefilled: false },
+      { word: 'Bob', type: 'first', prefilled: false },
+      { word: 'Brian', type: 'first', prefilled: false },
+      { word: 'Abrams', type: 'last', prefilled: false },
+      { word: 'Jackson', type: 'last', prefilled: false },
+      { word: 'Smith', type: 'last', prefilled: false },
+      { word: 'Wilson', type: 'last', prefilled: false },
+      { word: 'Tom', type: 'first', prefilled: false }
+    ];
+
+    const FIRST_NAMES_SET = new Set(['david', 'susan', 'nancy', 'bob', 'brian', 'tom']);
+    const LAST_NAMES_SET = new Set(['kennedy', 'cruise', 'abrams', 'jackson', 'smith', 'wilson']);
+
+    function renderWordBank() {
+      const container = document.getElementById('word-bank-list');
+      const inputs = Array.from(document.querySelectorAll('.sec1-input'));
+      const typedValues = new Set(
+        inputs.map(inp => inp.value.trim().toLowerCase()).filter(Boolean)
+      );
+
+      let placedCount = 2; // David and Kennedy are pre-filled
+      container.innerHTML = '';
+
+      WORD_BANK.forEach(item => {
+        const isUsed = item.prefilled || typedValues.has(item.word.toLowerCase());
+        if (!item.prefilled && isUsed) placedCount++;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = item.word;
+        btn.disabled = isUsed;
+
+        if (isUsed) {
+          btn.className = 'px-3 py-2 rounded-xl text-sm font-semibold bg-slate-200/70 text-slate-400 line-through cursor-default border border-transparent text-center';
+        } else {
+          btn.className = 'px-3 py-2 rounded-xl text-sm font-semibold bg-white text-slate-800 border border-slate-300 hover:border-brand-500 hover:bg-brand-50 hover:text-brand-700 shadow-2xs transition cursor-pointer text-center';
+          btn.title = 'Click to insert into the next empty slot';
+          btn.onclick = () => autoInsertWord(item.word);
+        }
+
+        container.appendChild(btn);
+      });
+
+      document.getElementById('wb-counter').textContent = `${placedCount} / 12 placed`;
+    }
+
+    function autoInsertWord(word) {
+      // Find first empty slot in First Names or Last Names (smartly or sequentially)
+      const isFirst = FIRST_NAMES_SET.has(word.toLowerCase());
+      const targetCol = isFirst ? 'first' : 'last';
+      const targetInputs = Array.from(document.querySelectorAll(`.sec1-input[data-col="${targetCol}"]`));
+      const emptySlot = targetInputs.find(inp => inp.value.trim() === '');
+
+      if (emptySlot) {
+        emptySlot.value = word;
+        emptySlot.focus();
+        updateWordBankStatus();
+        saveProgress(true);
+      } else {
+        // Fallback to any empty sec1-input
+        const anyEmpty = Array.from(document.querySelectorAll('.sec1-input')).find(inp => inp.value.trim() === '');
+        if (anyEmpty) {
+          anyEmpty.value = word;
+          updateWordBankStatus();
+          saveProgress(true);
+        }
+      }
+    }
+
+    function updateWordBankStatus() {
+      // Clear previous validation highlights when typing
+      document.querySelectorAll('.sec1-input').forEach(inp => {
+        inp.classList.remove('border-emerald-500', 'bg-emerald-50', 'border-rose-500', 'bg-rose-50');
+        const iconSpan = inp.parentElement.querySelector('.status-icon');
+        if (iconSpan) iconSpan.innerHTML = '';
+      });
+      const fb = document.getElementById('sec1-feedback');
+      if (fb) fb.classList.add('hidden');
+      renderWordBank();
+    }
+
+    function checkSection1() {
+      const inputs = Array.from(document.querySelectorAll('.sec1-input'));
+      let correctCount = 0;
+      let filledCount = 0;
+
+      inputs.forEach(inp => {
+        const val = inp.value.trim().toLowerCase();
+        const col = inp.dataset.col;
+        const iconSpan = inp.parentElement.querySelector('.status-icon');
+
+        inp.classList.remove('border-emerald-500', 'bg-emerald-50', 'border-rose-500', 'bg-rose-50');
+        if (!val) {
+          if (iconSpan) iconSpan.innerHTML = '';
+          return;
+        }
+
+        filledCount++;
+        const isValid = (col === 'first' && FIRST_NAMES_SET.has(val) && val !== 'david') ||
+                        (col === 'last' && LAST_NAMES_SET.has(val) && val !== 'kennedy');
+
+        if (isValid) {
+          correctCount++;
+          inp.classList.add('border-emerald-500', 'bg-emerald-50');
+          if (iconSpan) iconSpan.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600"></i>';
+        } else {
+          inp.classList.add('border-rose-500', 'bg-rose-50');
+          if (iconSpan) iconSpan.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-600"></i>';
+        }
+      });
+
+      const fb = document.getElementById('sec1-feedback');
+      fb.classList.remove('hidden', 'bg-emerald-50', 'text-emerald-800', 'border-emerald-200', 'bg-amber-50', 'text-amber-800', 'border-amber-200');
+
+      if (correctCount === 10) {
+        fb.classList.add('bg-emerald-50', 'text-emerald-800', 'border', 'border-emerald-200');
+        fb.innerHTML = '<i class="fa-solid fa-star mr-2"></i><strong>Excellent!</strong> All 10 names from the word bank are classified accurately.';
+      } else {
+        fb.classList.add('bg-amber-50', 'text-amber-800', 'border', 'border-amber-200');
+        fb.innerHTML = `<i class="fa-solid fa-circle-info mr-2"></i>You have <strong>${correctCount} of 10</strong> word bank names placed in the right column. Check any highlighted fields.`;
+      }
+    }
+
+    // =========================================================================
+    // 2. AUTO-SPELLING HELPER FOR SECTION 5 TASK 2
+    // =========================================================================
+    function autoSpellFamousPerson() {
+      const nameVal = document.getElementById('famous-person-input').value.trim();
+      const spellInput = document.getElementById('famous-spell-input');
+      if (!nameVal) {
+        spellInput.value = '';
+        return;
+      }
+      // Format into spelled letters (e.g. "Taylor Swift" -> "T-A-Y-L-O-R  S-W-I-F-T")
+      const spelled = nameVal
+        .split(/\s+/)
+        .map(word => word.toUpperCase().split('').join('-'))
+        .join('   ');
+      spellInput.value = spelled;
+    }
+
+    // =========================================================================
+    // 3. TAB NAVIGATION
+    // =========================================================================
+    function switchTab(targetId) {
+      const panels = document.querySelectorAll('.tab-panel');
+      const buttons = document.querySelectorAll('.tab-btn');
+
+      buttons.forEach(btn => {
+        btn.classList.remove('bg-brand-600', 'text-white', 'bg-amber-600');
+        if (btn.id === 'tab-sec6') {
+          btn.classList.add('bg-amber-100', 'text-amber-900');
+        } else {
+          btn.classList.add('bg-slate-100', 'text-slate-600');
+        }
+      });
+
+      const activeBtn = document.getElementById(`tab-${targetId}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-slate-100', 'text-slate-600', 'bg-amber-100', 'text-amber-900');
+        if (targetId === 'sec6') {
+          activeBtn.classList.add('bg-amber-600', 'text-white');
+        } else {
+          activeBtn.classList.add('bg-brand-600', 'text-white');
+        }
+      }
+
+      if (targetId === 'all') {
+        panels.forEach(panel => panel.classList.remove('hidden'));
+      } else {
+        panels.forEach(panel => {
+          if (panel.id === targetId) {
+            panel.classList.remove('hidden');
+          } else {
+            panel.classList.add('hidden');
+          }
+        });
+      }
+    }
+
+    // =========================================================================
+    // 4. LOCAL STORAGE PERSISTENCE & RESET MODAL
+    // =========================================================================
+    const STORAGE_KEY = 'unit1_names_titles_worksheet_v1';
+
+    function saveProgress(silent = false) {
+      try {
+        const inputs = document.querySelectorAll('input');
+        const state = [];
+        inputs.forEach((inp, idx) => {
+          if (inp.readOnly) return;
+          if (inp.type === 'radio' || inp.type === 'checkbox') {
+            state.push({ idx, checked: inp.checked });
+          } else {
+            state.push({ idx, value: inp.value });
+          }
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        if (!silent) {
+          showToast('Progress saved in your browser!', 'success');
+        }
+      } catch (err) {
+        console.warn('Could not save to localStorage:', err);
+      }
+    }
+
+    function loadProgress() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const state = JSON.parse(raw);
+        const inputs = document.querySelectorAll('input');
+        state.forEach(item => {
+          const inp = inputs[item.idx];
+          if (!inp || inp.readOnly) return;
+          if (inp.type === 'radio' || inp.type === 'checkbox') {
+            inp.checked = Boolean(item.checked);
+          } else {
+            inp.value = item.value || '';
+          }
+        });
+      } catch (err) {
+        console.warn('Could not load saved state:', err);
+      }
+    }
+
+    function openResetModal() {
+      const modal = document.getElementById('reset-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeResetModal() {
+      const modal = document.getElementById('reset-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function confirmReset() {
+      const inputs = document.querySelectorAll('input');
+      inputs.forEach(inp => {
+        if (inp.readOnly) return;
+        if (inp.type === 'radio' || inp.type === 'checkbox') {
+          // Keep Section 4 Task 1 #1 Informal checked as original example
+          inp.checked = (inp.name === 'sec4_t1_1' && inp.value === 'informal');
+        } else {
+          inp.value = '';
+        }
+      });
+      localStorage.removeItem(STORAGE_KEY);
+      updateWordBankStatus();
+      closeResetModal();
+      showToast('All answers have been cleared.', 'info');
+    }
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const bgClass = type === 'success' ? 'bg-slate-900 text-white' : 'bg-brand-700 text-white';
+      const icon = type === 'success' ? 'fa-circle-check text-emerald-400' : 'fa-circle-info text-sky-300';
+
+      toast.className = `${bgClass} px-4 py-3 rounded-xl shadow-lg text-sm font-medium flex items-center gap-2.5 transition-all duration-300`;
+      toast.innerHTML = `<i class="fa-solid ${icon}"></i><span>${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 2600);
+    }
+
+    // Auto-save whenever the user interacts with any input
+    document.addEventListener('change', () => saveProgress(true));
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadProgress();
+      renderWordBank();
+    });
+  </script>
+  <script>
+    // =========================================================================
+    // AUDIO PLAYERS — Google Drive embedded player (streams, no download needed)
+    // =========================================================================
+    const AUDIO_IDS = {
+      hotel:  '1kXKdRPm14-ZB5B6KA9KsLMYRoxhs9xDT',
+      cindy1: '1UhJshgITqcufIe8MFFYidaHunLbkMg7v',
+      cindy2: '1-8JWBa8tClTVC2zVBRAuGJLA48_U7R-5',
+      greet1: '1dW8n0Tv88DV0zrJpeEHYckqVAaDbpdlf',
+      greet2: '1dIBIdPIszPhAm8ZkEvz879pFX8HB_HjC',
+      test1:  '1Rqf8X8Krh-08gMLapHleSDiVagegMuTc',
+      test2:  '1OC4arA1Dr1-8GcjA473HFgen0L6obj3p'
+    };
+
+    function buildAudioPlayers() {
+      document.querySelectorAll('.audio-slot').forEach(slot => {
+        const id = AUDIO_IDS[slot.dataset.audio];
+        if (!id) return;
+        slot.className = 'audio-slot no-print flex flex-col gap-2 bg-white border border-slate-200 rounded-2xl p-3 shadow-sm';
+        slot.innerHTML = `
+          <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500">
+            <i class="fa-solid fa-volume-high text-slate-400"></i>
+            <span>Audio — ${slot.dataset.label}</span>
+          </div>
+          <iframe src="https://drive.google.com/file/d/${id}/preview"
+                  class="w-full h-32 rounded-xl border border-slate-200 bg-white"
+                  allow="autoplay" loading="lazy"></iframe>`;
+      });
+    }
+    window.addEventListener('DOMContentLoaded', buildAudioPlayers);
+  </script>
+</body>
+</html>
